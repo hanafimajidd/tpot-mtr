@@ -1,0 +1,431 @@
+!pip install tpot
+from tpot import TPOTRegressor
+import pandas as pd
+
+
+#importing data from a local CSV file
+from google.colab import files
+uploaded = files.upload()
+
+
+import pandas as pd
+df = pd.read_csv("csv_result-scm20d.csv")
+df.head()
+y_col = [
+'LBL',
+'MTLp2A',
+'MTLp3A',
+'MTLp4A',
+'MTLp5A',
+'MTLp6A',
+'MTLp7A',
+'MTLp8A',
+'MTLp9A',
+'MTLp10A',
+'MTLp11A',
+'MTLp12A',
+'MTLp13A',
+'MTLp14A',
+'MTLp15A',
+'MTLp16A'
+]
+y = df[y_col]
+#x_col_id = ['id']
+#x_id = df[x_col_id]
+y.head()
+#X_col = ['Xloc','Yloc','Cr','Ni','Zn','Co']
+#X = df[X_col]
+#X = df[df.columns.drop(y)]
+#X=df.drop(columns=['id'])
+X=df[df.columns.drop(y)]
+#X=df.drop(y,x_id)
+y.head()
+
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(
+X, y, test_size = 0.20, random_state = 123)
+X_train.fillna(X_train.mean(), inplace=True)
+X_test.fillna(X_test.mean(), inplace=True)
+y_train.fillna(y_train.mean(), inplace=True)
+y_test.fillna(y_test.mean(), inplace=True)
+from sklearn.preprocessing import MinMaxScaler
+
+from sklearn.compose import TransformedTargetRegressor
+
+# Initialize the scaler
+scaler=MinMaxScaler(feature_range=(0,1))
+
+# Choose a transformer for the target variable (e.g., StandardScaler)
+target_transformer = scaler
+
+
+
+from tpot import TPOTRegressor
+from sklearn.ensemble import RandomForestRegressor, ExtraTreesRegressor
+from sklearn.svm import LinearSVR
+from sklearn.ensemble import RandomForestRegressor, ExtraTreesRegressor
+from sklearn.multioutput import MultiOutputRegressor
+#rfg = MultiOutputRegressor(RandomForestRegressor(n_estimators=100,criterion='squared_error'))
+rfg = MultiOutputRegressor(TPOTRegressor(generations=5, population_size=5,verbosity=2, random_state=123,n_jobs=-1,max_time_mins=None, max_eval_time_mins=5, cv=10,scoring='neg_mean_squared_error'))
+# Create a TransformedTargetRegressor
+model = TransformedTargetRegressor(regressor=rfg, transformer=target_transformer)
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+model.score(X_test, y_test)
+
+
+
+
+import math
+import numpy as np
+from statistics import mean
+from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_absolute_error
+rmse1=math.sqrt(mean_squared_error(y_test, y_pred))
+print('RMSE  is',rmse1)
+mae1=mean_absolute_error(y_test, y_pred)
+print('MAE is',mae1)
+
+
+
+
+# Calculate RMSE for each output
+rmse_per_output = np.sqrt(mean_squared_error(y_test, y_pred, multioutput='raw_values'))
+print('rmse_per_output:',rmse_per_output)
+
+
+def relative_root_mean_squared_error(true, pred):
+    n = len(true) # update
+    num = np.sum(np.square(true - pred)) / n  # update
+    den = np.sum(np.square(pred))
+    squared_error = num/den
+    rrmse_loss = np.sqrt(squared_error)
+    return rrmse_loss
+
+
+rrmse2=relative_root_mean_squared_error(y_test,y_pred)
+arrmse2=np.mean(rrmse2)
+percentage_average_relative_rmse2 = arrmse2 * 100
+print("arrmse =", arrmse2)
+print(f"Percentage arrmse = {percentage_average_relative_rmse2:.2f}%")
+
+
+from tables import Column
+import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.pyplot as plt
+fig, ax = plt.subplots(figsize=(10,10))
+# taking all rows but only 6 columns
+df_small=pd.DataFrame(y_pred)
+#df_small = y_test.iloc[:,:3]
+features=['LBL',
+'MTLp2A',
+'MTLp3A',
+'MTLp4A',
+'MTLp5A',
+'MTLp6A',
+'MTLp7A',
+'MTLp8A',
+'MTLp9A',
+'MTLp10A',
+'MTLp11A',
+'MTLp12A',
+'MTLp13A',
+'MTLp14A',
+'MTLp15A',
+'MTLp16A']
+correlation_mat = df_small.corr('pearson')
+sns.heatmap(correlation_mat, annot = True,yticklabels=features,xticklabels=features)
+plt.show()
+
+import pandas as pd
+df = pd.read_csv("csv_result-scm20d.csv")
+df.head()
+y_col = [
+'LBL',
+'MTLp2A',
+'MTLp3A',
+'MTLp4A',
+'MTLp5A',
+'MTLp6A',
+'MTLp7A',
+'MTLp8A',
+'MTLp9A',
+'MTLp10A',
+'MTLp11A',
+'MTLp12A',
+'MTLp13A',
+'MTLp14A',
+'MTLp15A',
+'MTLp16A'
+]
+y = df[y_col]
+#x_col_id = ['id']
+#x_id = df[x_col_id]
+y.head()
+#X_col = ['Xloc','Yloc','Cr','Ni','Zn','Co']
+#X = df[X_col]
+#X = df[df.columns.drop(y)]
+#X=df.drop(columns=['id'])
+X=df[df.columns.drop(y)]
+#X=df.drop(y,x_id)
+y.head()
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(
+X, y, test_size = 0.20, random_state = 123)
+X_train.fillna(X_train.mean(), inplace=True)
+X_test.fillna(X_test.mean(), inplace=True)
+y_train.fillna(y_train.mean(), inplace=True)
+y_test.fillna(y_test.mean(), inplace=True)
+from sklearn.preprocessing import MinMaxScaler,StandardScaler
+
+from sklearn.compose import TransformedTargetRegressor
+
+# Initialize the scaler
+scaler=MinMaxScaler(feature_range=(0,1))
+#scaler=StandardScaler()
+# Choose a transformer for the target variable (e.g., StandardScaler)
+target_transformer = scaler
+
+from sklearn.ensemble import RandomForestRegressor, ExtraTreesRegressor
+from sklearn.svm import LinearSVR
+from sklearn.ensemble import RandomForestRegressor, ExtraTreesRegressor
+from sklearn.multioutput import MultiOutputRegressor
+from sklearn.multioutput import RegressorChain
+#reg = LinearSVR(epsilon=0.0, tol=0.0001, C=1.0, loss='epsilon_insensitive', fit_intercept=True, intercept_scaling=1.0, dual=True, verbose=2, random_state=None, max_iter=1000000)
+reg=LinearSVR(C=0.1, dual=False, fit_intercept=True, max_iter=1000,random_state=123,loss='squared_epsilon_insensitive')
+chain = RegressorChain(base_estimator=reg, order=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]).fit(X_train, y_train)
+# Create a TransformedTargetRegressor
+model = TransformedTargetRegressor(regressor=chain, transformer=target_transformer)
+model.fit(X_train, y_train)
+y_pred2 = model.predict(X_test)
+model.score(X_test, y_test)
+
+import math
+import numpy as np
+from statistics import mean
+from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_absolute_error
+rmse2=math.sqrt(mean_squared_error(y_test, y_pred2))
+print('RMSE  is',rmse2)
+mae2=mean_absolute_error(y_test, y_pred2)
+print('MAE is',mae2)
+
+
+
+
+# Calculate RMSE for each output
+rmse_per_output = np.sqrt(mean_squared_error(y_test, y_pred2, multioutput='raw_values'))
+print('rmse_per_output:',rmse_per_output)
+
+
+def relative_root_mean_squared_error(true, pred):
+    n = len(true) # update
+    num = np.sum(np.square(true - pred)) / n  # update
+    den = np.sum(np.square(pred))
+    squared_error = num/den
+    rrmse_loss = np.sqrt(squared_error)
+    return rrmse_loss
+
+
+rrmse2=relative_root_mean_squared_error(y_test,y_pred2)
+arrmse2=np.mean(rrmse2)
+percentage_average_relative_rmse2 = arrmse2 * 100
+print("arrmse =", arrmse2)
+print(f"Percentage arrmse = {percentage_average_relative_rmse2:.2f}%")
+
+from tables import Column
+import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.pyplot as plt
+fig, ax = plt.subplots(figsize=(10,10))
+# taking all rows but only 6 columns
+df_small=pd.DataFrame(y_pred2)
+#df_small = y_test.iloc[:,:3]
+features=['LBL',
+'MTLp2A',
+'MTLp3A',
+'MTLp4A',
+'MTLp5A',
+'MTLp6A',
+'MTLp7A',
+'MTLp8A',
+'MTLp9A',
+'MTLp10A',
+'MTLp11A',
+'MTLp12A',
+'MTLp13A',
+'MTLp14A',
+'MTLp15A',
+'MTLp16A']
+correlation_mat = df_small.corr('pearson')
+sns.heatmap(correlation_mat, annot = True,yticklabels=features,xticklabels=features)
+plt.show()
+
+import pandas as pd
+df = pd.read_csv("csv_result-scm20d.csv")
+df.head()
+y_col = [
+'LBL',
+'MTLp2A',
+'MTLp3A',
+'MTLp4A',
+'MTLp5A',
+'MTLp6A',
+'MTLp7A',
+'MTLp8A',
+'MTLp9A',
+'MTLp10A',
+'MTLp11A',
+'MTLp12A',
+'MTLp13A',
+'MTLp14A',
+'MTLp15A',
+'MTLp16A'
+]
+y = df[y_col]
+#x_col_id = ['id']
+#x_id = df[x_col_id]
+y.head()
+#X_col = ['Xloc','Yloc','Cr','Ni','Zn','Co']
+#X = df[X_col]
+#X = df[df.columns.drop(y)]
+#X=df.drop(columns=['id'])
+X=df[df.columns.drop(y)]
+#X=df.drop(y,x_id)
+y.head()
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(
+X, y, test_size = 0.20, random_state = 123)
+X_train.fillna(X_train.mean(), inplace=True)
+X_test.fillna(X_test.mean(), inplace=True)
+y_train.fillna(y_train.mean(), inplace=True)
+y_test.fillna(y_test.mean(), inplace=True)
+from sklearn.preprocessing import MinMaxScaler
+from tpot import TPOTRegressor
+from sklearn.compose import TransformedTargetRegressor
+
+# Initialize the scaler
+scaler=MinMaxScaler(feature_range=(0,1))
+X_train=scaler.fit_transform(X_train)
+X_test=scaler.fit_transform(X_test)
+y_train=scaler.fit_transform(y_train)
+y_test=scaler.fit_transform(y_test)
+
+from sklearn.svm import LinearSVR
+class MultiOutputTP(object):
+  def __init__(self, *args, **kwargs):
+    self.args = args
+    self.kwargs = kwargs
+  def fit(self, X, y):
+    X, y = map(np.atleast_2d, (X, y))
+    assert X.shape[0] == y.shape[0]
+    yy = y.shape[1]
+    self.regs = []
+    for i in range(yy):
+#while i <= Ny:
+      reg = TPOTRegressor(generations=5, population_size=5,verbosity=2, random_state=123,n_jobs=1, max_time_mins=None, max_eval_time_mins=5, cv=10,scoring='neg_mean_squared_error')
+      #reg = LinearSVR(epsilon=0.0, tol=0.0001, C=1.0, loss='epsilon_insensitive', fit_intercept=True, intercept_scaling=1.0, dual=True, verbose=1, random_state=123, max_iter=10000)
+      Xi = np.hstack([X, y[:, :i]])
+      yi = y[:, i]
+      self.regs.append(reg.fit(Xi, yi))
+
+
+    return self
+  def predict(self, X):
+    y = np.empty([X.shape[0], len(self.regs)])
+    for i, reg in enumerate(self.regs):
+      y[:, i] = reg.predict(np.hstack([X, y[:, :i]]))
+    return y
+
+
+import numpy as np
+from tpot import decorators
+#decorators.MAX_EVAL_SECS = 240
+reg2 = MultiOutputTP(1).fit(X_train, y_train)
+#X = np.dtype('float64')
+
+
+
+Ypred2 = reg2.predict(X_test)
+
+
+from sklearn.metrics import r2_score
+r2 = r2_score(y_test, Ypred2)
+print('r2 score for perfect model is', r2)
+
+y_test=scaler.inverse_transform(y_test)
+Ypred2=scaler.inverse_transform(Ypred2)
+
+from tables import Column
+import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.pyplot as plt
+# taking all rows but only 6 columns
+fig, ax = plt.subplots(figsize=(10,10))
+df_small=pd.DataFrame(Ypred2)
+#df_small = y_test.iloc[:,:3]
+features=['LBL',
+'MTLp2A',
+'MTLp3A',
+'MTLp4A',
+'MTLp5A',
+'MTLp6A',
+'MTLp7A',
+'MTLp8A',
+'MTLp9A',
+'MTLp10A',
+'MTLp11A',
+'MTLp12A',
+'MTLp13A',
+'MTLp14A',
+'MTLp15A',
+'MTLp16A']
+correlation_mat = df_small.corr('pearson')
+sns.heatmap(correlation_mat, annot = True,yticklabels=features,xticklabels=features)
+plt.show()
+
+import math
+import numpy as np
+from statistics import mean
+from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_absolute_error
+rmse3=math.sqrt(mean_squared_error(y_test, Ypred2))
+print('RMSE  is',rmse3)
+mae3=mean_absolute_error(y_test, Ypred2)
+print('MAE  is',mae3)
+
+
+
+
+# Calculate RMSE for each output
+rmse_per_output = np.sqrt(mean_squared_error(y_test, Ypred2, multioutput='raw_values'))
+print('rmse_per_output:',rmse_per_output)
+
+def relative_root_mean_squared_error(true, pred):
+    n = len(true) # update
+    num = np.sum(np.square(true - pred)) / n  # update
+    den = np.sum(np.square(pred))
+    squared_error = num/den
+    rrmse_loss = np.sqrt(squared_error)
+    return rrmse_loss
+
+
+rrmse3=relative_root_mean_squared_error(y_test,Ypred2)
+arrmse3=np.mean(rrmse3)
+percentage_average_relative_rmse3 = arrmse3 * 100
+print("relative_root_mean_squared_error =", rrmse3)
+print("arrmse =", arrmse3)
+print(f"Percentage arrmse = {percentage_average_relative_rmse3:.2f}%")
