@@ -1,0 +1,537 @@
+Code cell <_zS_tvapK-Xt>
+# %% [code]
+!pip install tpot
+from tpot import TPOTRegressor
+import pandas as pd
+
+Execution output from Apr 15, 2024 11:28 PM
+4KB
+	Stream
+		Collecting tpot
+		  Downloading TPOT-0.12.2-py3-none-any.whl (87 kB)
+		[?25l     [90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m0.0/87.4 kB[0m [31m?[0m eta [36m-:--:--[0m
+[2K     [91m━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━[0m [32m51.2/87.4 kB[0m [31m1.3 MB/s[0m eta [36m0:00:01[0m
+[2K     [90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m87.4/87.4 kB[0m [31m1.4 MB/s[0m eta [36m0:00:00[0m
+		[?25hRequirement already satisfied: numpy>=1.16.3 in /usr/local/lib/python3.10/dist-packages (from tpot) (1.25.2)
+		Requirement already satisfied: scipy>=1.3.1 in /usr/local/lib/python3.10/dist-packages (from tpot) (1.11.4)
+		Collecting scikit-learn>=1.4.1 (from tpot)
+		  Downloading scikit_learn-1.4.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (12.1 MB)
+		[2K     [90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m12.1/12.1 MB[0m [31m23.3 MB/s[0m eta [36m0:00:00[0m
+		[?25hCollecting deap>=1.2 (from tpot)
+		  Downloading deap-1.4.1-cp310-cp310-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (135 kB)
+		[2K     [90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m135.4/135.4 kB[0m [31m7.0 MB/s[0m eta [36m0:00:00[0m
+		[?25hCollecting update-checker>=0.16 (from tpot)
+		  Downloading update_checker-0.18.0-py3-none-any.whl (7.0 kB)
+		Requirement already satisfied: tqdm>=4.36.1 in /usr/local/lib/python3.10/dist-packages (from tpot) (4.66.2)
+		Collecting stopit>=1.1.1 (from tpot)
+		  Downloading stopit-1.1.2.tar.gz (18 kB)
+		  Preparing metadata (setup.py) ... [?25l[?25hdone
+		Requirement already satisfied: pandas>=0.24.2 in /usr/local/lib/python3.10/dist-packages (from tpot) (2.0.3)
+		Requirement already satisfied: joblib>=0.13.2 in /usr/local/lib/python3.10/dist-packages (from tpot) (1.4.0)
+		Requirement already satisfied: xgboost>=1.1.0 in /usr/local/lib/python3.10/dist-packages (from tpot) (2.0.3)
+		Requirement already satisfied: python-dateutil>=2.8.2 in /usr/local/lib/python3.10/dist-packages (from pandas>=0.24.2->tpot) (2.8.2)
+		Requirement already satisfied: pytz>=2020.1 in /usr/local/lib/python3.10/dist-packages (from pandas>=0.24.2->tpot) (2023.4)
+		Requirement already satisfied: tzdata>=2022.1 in /usr/local/lib/python3.10/dist-packages (from pandas>=0.24.2->tpot) (2024.1)
+		Requirement already satisfied: threadpoolctl>=2.0.0 in /usr/local/lib/python3.10/dist-packages (from scikit-learn>=1.4.1->tpot) (3.4.0)
+		Requirement already satisfied: requests>=2.3.0 in /usr/local/lib/python3.10/dist-packages (from update-checker>=0.16->tpot) (2.31.0)
+		Requirement already satisfied: six>=1.5 in /usr/local/lib/python3.10/dist-packages (from python-dateutil>=2.8.2->pandas>=0.24.2->tpot) (1.16.0)
+		Requirement already satisfied: charset-normalizer<4,>=2 in /usr/local/lib/python3.10/dist-packages (from requests>=2.3.0->update-checker>=0.16->tpot) (3.3.2)
+		Requirement already satisfied: idna<4,>=2.5 in /usr/local/lib/python3.10/dist-packages (from requests>=2.3.0->update-checker>=0.16->tpot) (3.6)
+		Requirement already satisfied: urllib3<3,>=1.21.1 in /usr/local/lib/python3.10/dist-packages (from requests>=2.3.0->update-checker>=0.16->tpot) (2.0.7)
+		Requirement already satisfied: certifi>=2017.4.17 in /usr/local/lib/python3.10/dist-packages (from requests>=2.3.0->update-checker>=0.16->tpot) (2024.2.2)
+		Building wheels for collected packages: stopit
+		  Building wheel for stopit (setup.py) ... [?25l[?25hdone
+		  Created wheel for stopit: filename=stopit-1.1.2-py3-none-any.whl size=11938 sha256=6324e9cafd80446474eb08326a905e716a497cd42f42db462341236ff2b5803f
+		  Stored in directory: /root/.cache/pip/wheels/af/f9/87/bf5b3d565c2a007b4dae9d8142dccc85a9f164e517062dd519
+		Successfully built stopit
+		Installing collected packages: stopit, deap, update-checker, scikit-learn, tpot
+		  Attempting uninstall: scikit-learn
+		    Found existing installation: scikit-learn 1.2.2
+		    Uninstalling scikit-learn-1.2.2:
+		      Successfully uninstalled scikit-learn-1.2.2
+		Successfully installed deap-1.4.1 scikit-learn-1.4.2 stopit-1.1.2 tpot-0.12.2 update-checker-0.18.0
+
+Code cell <IMZ58d4XLCiP>
+# %% [code]
+#importing data from a local CSV file
+from google.colab import files
+uploaded = files.upload()
+
+Execution output from Apr 15, 2024 11:28 PM
+6KB
+	Stream
+		Saving enb.csv to enb.csv
+
+Code cell <NS_siyrXLaYS>
+# %% [code]
+import pandas as pd
+df = pd.read_csv("enb.csv")
+df.head()
+y_col = [
+'Y1',
+'Y2'
+
+]
+y = df[y_col]
+#x_col_id = ['id']
+#x_id = df[x_col_id]
+y.head()
+#X_col = ['Xloc','Yloc','Cr','Ni','Zn','Co']
+#X = df[X_col]
+#X = df[df.columns.drop(y)]
+#X=df.drop(columns=['id'])
+X=df[df.columns.drop(y)]
+#X=df.drop(y,x_id)
+y.head()
+
+Execution output from Apr 7, 2024 12:38 AM
+9KB
+	text/plain
+		Y1     Y2
+		0  15.55  21.33
+		1  15.55  21.33
+		2  15.55  21.33
+		3  15.55  21.33
+		4  20.84  28.28
+
+Code cell <QwfcZLHRLbU9>
+# %% [code]
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(
+X, y, test_size = 0.20, random_state = 123)
+X_train.fillna(X_train.mean(), inplace=True)
+X_test.fillna(X_test.mean(), inplace=True)
+y_train.fillna(y_train.mean(), inplace=True)
+y_test.fillna(y_test.mean(), inplace=True)
+
+from sklearn.preprocessing import MinMaxScaler
+
+from sklearn.compose import TransformedTargetRegressor
+
+# Initialize the scaler
+scaler=MinMaxScaler(feature_range=(0,1))
+
+# Choose a transformer for the target variable (e.g., StandardScaler)
+target_transformer = scaler
+
+
+
+
+Code cell <lLOiEzntZPyu>
+# %% [code]
+from sklearn.ensemble import RandomForestRegressor, ExtraTreesRegressor
+from sklearn.svm import LinearSVR
+from sklearn.ensemble import RandomForestRegressor, ExtraTreesRegressor
+from sklearn.multioutput import MultiOutputRegressor
+#rfg = MultiOutputRegressor(RandomForestRegressor(n_estimators=100,criterion='squared_error'))
+rfg = MultiOutputRegressor(TPOTRegressor(generations=5, population_size=50,verbosity=2, random_state=123,n_jobs=1, max_time_mins=None, max_eval_time_mins=5, cv=10, scoring='neg_mean_squared_error'))
+# Create a TransformedTargetRegressor
+model = TransformedTargetRegressor(regressor=rfg, transformer=target_transformer)
+
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+model.score(X_test, y_test)
+
+
+
+
+Execution output from Apr 7, 2024 12:54 AM
+2KB
+	Stream
+		Generation 1 - Current best internal CV score: -0.00017952954307227944
+		
+		Generation 2 - Current best internal CV score: -0.0001714293703936163
+		
+		Generation 3 - Current best internal CV score: -0.0001499803094384763
+		
+		Generation 4 - Current best internal CV score: -0.0001499803094384763
+		
+		Generation 5 - Current best internal CV score: -0.0001499803094384763
+		
+		Best pipeline: XGBRegressor(input_matrix, learning_rate=1.0, max_depth=4, min_child_weight=15, n_estimators=100, n_jobs=1, objective=reg:squarederror, subsample=0.9000000000000001, verbosity=0)
+		Generation 1 - Current best internal CV score: -0.0012106496978778656
+		
+		Generation 2 - Current best internal CV score: -0.000860933113616637
+		
+		Generation 3 - Current best internal CV score: -0.000860933113616637
+		
+		Generation 4 - Current best internal CV score: -0.000860933113616637
+		
+		Generation 5 - Current best internal CV score: -0.000860933113616637
+		
+		Best pipeline: XGBRegressor(input_matrix, learning_rate=0.5, max_depth=4, min_child_weight=4, n_estimators=100, n_jobs=1, objective=reg:squarederror, subsample=0.7500000000000001, verbosity=0)
+	text/plain
+		Optimization Progress:   0%|          | 0/300 [00:00<?, ?pipeline/s]
+		Optimization Progress:   0%|          | 0/300 [00:00<?, ?pipeline/s]
+		0.9955537715650167
+
+Code cell <YvgsgfLnZtnb>
+# %% [code]
+import numpy as np
+from statistics import mean
+from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_absolute_error
+rmse1=np.sqrt(mean_squared_error(y_test, y_pred))
+print('RMSE  is',rmse1)
+mae1=mean_absolute_error(y_test, y_pred)
+print('MAE is',mae1)
+
+# Calculate RMSE for each output
+rmse_per_output = np.sqrt(mean_squared_error(y_test, y_pred, multioutput='raw_values'))
+print('rmse_per_output:',rmse_per_output)
+
+
+def relative_root_mean_squared_error(true, pred):
+    n = len(true) # update
+    num = np.sum(np.square(true - pred)) / n  # update
+    den = np.sum(np.square(pred))
+    squared_error = num/den
+    rrmse_loss = np.sqrt(squared_error)
+    return rrmse_loss
+
+rrmse2=relative_root_mean_squared_error(y_test,y_pred)
+arrmse2=mean(rrmse2)
+percentage_average_relative_rmse2 = arrmse2 * 100
+print("rrmse =",rrmse2)
+print("arrmse =", arrmse2)
+print(f"Percentage arrmse = {percentage_average_relative_rmse2:.2f}%")
+Execution output from Apr 7, 2024 12:56 AM
+0KB
+	Stream
+		RMSE  is 0.5777144258294661
+		MAE is 0.4043211255135474
+		rmse_per_output: [0.35907487 0.73387544]
+		rrmse = Y1    0.000855
+		Y2    0.001747
+		dtype: float64
+		arrmse = 0.0013010613627497272
+		Percentage arrmse = 0.13%
+
+Code cell <MXW0wNtwWjQq>
+# %% [code]
+from tables import Column
+import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.pyplot as plt
+# taking all rows but only 6 columns
+df_small=pd.DataFrame(y_pred)
+#df_small = y_test.iloc[:,:3]
+features=['Y1','Y2']
+correlation_mat = df_small.corr('pearson')
+sns.heatmap(correlation_mat, annot = True,yticklabels=features,xticklabels=features)
+plt.show()
+Execution output from Feb 2, 2024 5:41 PM
+23KB
+	text/plain
+		<Figure size 640x480 with 2 Axes>
+
+Code cell <KRiXvTbjWpFA>
+# %% [code]
+from sklearn.ensemble import RandomForestRegressor, ExtraTreesRegressor
+from sklearn.svm import LinearSVR
+from sklearn.ensemble import RandomForestRegressor, ExtraTreesRegressor
+from sklearn.multioutput import MultiOutputRegressor
+from sklearn.multioutput import RegressorChain
+reg = LinearSVR(epsilon=0.0, tol=0.0001, C=1.0, loss='epsilon_insensitive', fit_intercept=True, intercept_scaling=1.0, dual=True, verbose=2, random_state=None, max_iter=10000000)
+chain = RegressorChain(base_estimator=reg, order=[0,1]).fit(X_train, y_train)
+# Create a TransformedTargetRegressor
+model = TransformedTargetRegressor(regressor=chain, transformer=target_transformer)
+model.fit(X_train, y_train)
+y_pred2 = model.predict(X_test)
+model.score(X_test, y_test)
+Execution output from Feb 2, 2024 5:59 PM
+1KB
+	Stream
+		[LibLinear][LibLinear]
+		/usr/local/lib/python3.10/dist-packages/sklearn/svm/_base.py:1244: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+		  warnings.warn(
+		[LibLinear]
+		/usr/local/lib/python3.10/dist-packages/sklearn/svm/_base.py:1244: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+		  warnings.warn(
+		[LibLinear]
+		/usr/local/lib/python3.10/dist-packages/sklearn/svm/_base.py:1244: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+		  warnings.warn(
+	text/plain
+		0.8986382295477287
+
+Code cell <7Nz5SuHBW5lk>
+# %% [code]
+import math
+import numpy as np
+from statistics import mean
+from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_absolute_error
+rmse2=math.sqrt(mean_squared_error(y_test, y_pred2))
+print('RMSE  is',rmse2)
+mae2=mean_absolute_error(y_test, y_pred2)
+print('MAE is',mae2)
+
+
+
+
+# Calculate RMSE for each output
+rmse_per_output = np.sqrt(mean_squared_error(y_test, y_pred2, multioutput='raw_values'))
+print('rmse_per_output:',rmse_per_output)
+
+
+def relative_root_mean_squared_error(true, pred):
+    n = len(true) # update
+    num = np.sum(np.square(true - pred)) / n  # update
+    den = np.sum(np.square(pred))
+    squared_error = num/den
+    rrmse_loss = np.sqrt(squared_error)
+    return rrmse_loss
+
+
+rrmse2=relative_root_mean_squared_error(y_test,y_pred2)
+arrmse2=np.mean(rrmse2)
+percentage_average_relative_rmse2 = arrmse2 * 100
+print("arrmse =", arrmse2)
+print(f"Percentage arrmse = {percentage_average_relative_rmse2:.2f}%")
+Execution output from Feb 2, 2024 6:01 PM
+0KB
+	Stream
+		RMSE  is 2.8330829319976396
+		MAE is 2.053211044371722
+		rmse_per_output: [2.88364647 2.78160041]
+		arrmse = 0.006712262294826252
+		Percentage arrmse = 0.67%
+
+Code cell <28yB_dJrn8fh>
+# %% [code]
+from tables import Column
+import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.pyplot as plt
+# taking all rows but only 6 columns
+df_small=pd.DataFrame(y_pred2)
+#df_small = y_test.iloc[:,:3]
+features=['Y1','Y2']
+correlation_mat = df_small.corr('pearson')
+sns.heatmap(correlation_mat, annot = True,yticklabels=features,xticklabels=features)
+plt.show()
+Execution output from Feb 2, 2024 6:03 PM
+22KB
+	text/plain
+		<Figure size 640x480 with 2 Axes>
+
+Code cell <CTz83TIJYC2Y>
+# %% [code]
+import pandas as pd
+df = pd.read_csv("enb.csv")
+df.head()
+y_col = [
+'Y1',
+'Y2'
+
+]
+y = df[y_col]
+#x_col_id = ['id']
+#x_id = df[x_col_id]
+y.head()
+#X_col = ['Xloc','Yloc','Cr','Ni','Zn','Co']
+#X = df[X_col]
+#X = df[df.columns.drop(y)]
+#X=df.drop(columns=['id'])
+X=df[df.columns.drop(y)]
+#X=df.drop(y,x_id)
+y.head()
+Execution output from Apr 16, 2024 1:22 AM
+9KB
+	text/plain
+		Y1     Y2
+		0  15.55  21.33
+		1  15.55  21.33
+		2  15.55  21.33
+		3  15.55  21.33
+		4  20.84  28.28
+
+Code cell <PZx3oh-rb3az>
+# %% [code]
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(
+X, y, test_size = 0.20, random_state = 123)
+X_train.fillna(X_train.mean(), inplace=True)
+X_test.fillna(X_test.mean(), inplace=True)
+y_train.fillna(y_train.mean(), inplace=True)
+y_test.fillna(y_test.mean(), inplace=True)
+
+Code cell <V42rlesSRd_q>
+# %% [code]
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(
+X, y, test_size = 0.20, random_state = 123)
+X_train.fillna(X_train.mean(), inplace=True)
+X_test.fillna(X_test.mean(), inplace=True)
+y_train.fillna(y_train.mean(), inplace=True)
+y_test.fillna(y_test.mean(), inplace=True)
+from sklearn.preprocessing import MinMaxScaler,StandardScaler
+
+from sklearn.compose import TransformedTargetRegressor
+
+# Initialize the scaler
+scaler=MinMaxScaler(feature_range=(0,1))
+#scaler=StandardScaler()
+X_train=scaler.fit_transform(X_train)
+X_test=scaler.fit_transform(X_test)
+y_train=scaler.fit_transform(y_train)
+y_test=scaler.fit_transform(y_test)
+
+Code cell <alnp0Cm1MPEx>
+# %% [code]
+from sklearn.svm import LinearSVR
+class MultiOutputTP(object):
+  def __init__(self, *args, **kwargs):
+    self.args = args
+    self.kwargs = kwargs
+  def fit(self, X, y):
+    X, y = map(np.atleast_2d, (X, y))
+    assert X.shape[0] == y.shape[0]
+    yy = y.shape[1]
+    self.regs = []
+    for i in range(yy):
+#while i <= Ny:
+      reg = TPOTRegressor(generations=5, population_size=50,verbosity=2, random_state=123,n_jobs=1, max_time_mins=None, max_eval_time_mins=5, cv=10,scoring='neg_mean_squared_error')
+      #reg = LinearSVR(epsilon=0.0, tol=0.0001, C=1.0, loss='epsilon_insensitive', fit_intercept=True, intercept_scaling=1.0, dual=True, verbose=1, random_state=123, max_iter=10000)
+      Xi = np.hstack([X, y[:, :i]])
+      yi = y[:, i]
+      self.regs.append(reg.fit(Xi, yi))
+
+
+    return self
+  def predict(self, X):
+    y = np.empty([X.shape[0], len(self.regs)])
+    for i, reg in enumerate(self.regs):
+      y[:, i] = reg.predict(np.hstack([X, y[:, :i]]))
+    return y
+
+
+Code cell <YnbYahFmNMGN>
+# %% [code]
+import numpy as np
+from tpot import decorators
+#decorators.MAX_EVAL_SECS = 240
+reg2 = MultiOutputTP(1).fit(X_train, y_train)
+#X = np.dtype('float64')
+
+
+Execution output from Apr 16, 2024 1:36 AM
+2KB
+	Stream
+		Generation 1 - Current best internal CV score: -0.0001795295430722793
+		
+		Generation 2 - Current best internal CV score: -0.00015182954118360463
+		
+		Generation 3 - Current best internal CV score: -0.00015182954118360463
+		
+		Generation 4 - Current best internal CV score: -0.00013660233984274568
+		
+		Generation 5 - Current best internal CV score: -0.00010203363252172868
+		
+		Best pipeline: XGBRegressor(input_matrix, learning_rate=0.1, max_depth=10, min_child_weight=3, n_estimators=100, n_jobs=1, objective=reg:squarederror, subsample=0.9000000000000001, verbosity=0)
+		Generation 1 - Current best internal CV score: -0.0013448040903275762
+		
+		Generation 2 - Current best internal CV score: -0.0013448040903275762
+		
+		Generation 3 - Current best internal CV score: -0.0013448040903275762
+		
+		Generation 4 - Current best internal CV score: -0.0013448040903275762
+		
+		Generation 5 - Current best internal CV score: -0.0013448040903275762
+		
+		Best pipeline: XGBRegressor(input_matrix, learning_rate=0.1, max_depth=5, min_child_weight=7, n_estimators=100, n_jobs=1, objective=reg:squarederror, subsample=0.9500000000000001, verbosity=0)
+	text/plain
+		Optimization Progress:   0%|          | 0/300 [00:00<?, ?pipeline/s]
+		Optimization Progress:   0%|          | 0/300 [00:00<?, ?pipeline/s]
+
+Code cell <9qoxI-A0NNkI>
+# %% [code]
+Ypred2 = reg2.predict(X_test)
+
+Code cell <4FkjwrhqhUk1>
+# %% [code]
+from sklearn.metrics import r2_score
+r2 = r2_score(y_test, Ypred2)
+print('r2 score for perfect model is', r2)
+Execution output from Apr 16, 2024 1:42 AM
+0KB
+	Stream
+		r2 score for perfect model is 0.9569694098215105
+
+Code cell <J_ktkhfUbcaS>
+# %% [code]
+y_test=scaler.inverse_transform(y_test)
+Ypred2=scaler.inverse_transform(Ypred2)
+
+Code cell <uBgESMbmJaY1>
+# %% [code]
+from tables import Column
+import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.pyplot as plt
+# taking all rows but only 6 columns
+df_small=pd.DataFrame(Ypred2)
+#df_small = y_test.iloc[:,:3]
+features=['Y1','Y2']
+correlation_mat = df_small.corr('pearson')
+sns.heatmap(correlation_mat, annot = True,yticklabels=features,xticklabels=features)
+plt.show()
+Execution output from Apr 16, 2024 1:43 AM
+21KB
+	text/plain
+		<Figure size 640x480 with 2 Axes>
+
+Code cell <LOOQTBmHXbOF>
+# %% [code]
+import math
+import numpy as np
+from statistics import mean
+from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_absolute_error
+rmse3=math.sqrt(mean_squared_error(y_test, Ypred2))
+print('RMSE  is',rmse3)
+mae3=mean_absolute_error(y_test, Ypred2)
+print('MAE  is',mae3)
+
+
+
+
+# Calculate RMSE for each output
+rmse_per_output = np.sqrt(mean_squared_error(y_test, Ypred2, multioutput='raw_values'))
+print('rmse_per_output:',rmse_per_output)
+
+def relative_root_mean_squared_error(true, pred):
+    n = len(true) # update
+    num = np.sum(np.square(true - pred)) / n  # update
+    den = np.sum(np.square(pred))
+    squared_error = num/den
+    rrmse_loss = np.sqrt(squared_error)
+    return rrmse_loss
+
+
+rrmse3=relative_root_mean_squared_error(y_test,Ypred2)
+arrmse3=np.mean(rrmse3)
+percentage_average_relative_rmse3 = arrmse3 * 100
+print("relative_root_mean_squared_error =", rrmse3)
+print("arrmse =", arrmse3)
+print(f"Percentage arrmse = {percentage_average_relative_rmse3:.2f}%")
+Execution output from Apr 16, 2024 1:43 AM
+0KB
+	Stream
+		RMSE  is 1.7810617543068523
+		MAE  is 1.178076237381085
+		rmse_per_output: [0.70904007 2.4169452 ]
+		relative_root_mean_squared_error = 0.006192352544135213
+		arrmse = 0.006192352544135213
+		Percentage arrmse = 0.62%
+
+
