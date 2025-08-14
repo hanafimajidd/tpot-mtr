@@ -1,0 +1,674 @@
+Code cell <_zS_tvapK-Xt>
+# %% [code]
+!pip install tpot
+
+import pandas as pd
+
+Execution output from May 15, 2024 12:16 AM
+4KB
+	Stream
+		Collecting tpot
+		  Downloading TPOT-0.12.2-py3-none-any.whl (87 kB)
+		[?25l     [90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m0.0/87.4 kB[0m [31m?[0m eta [36m-:--:--[0m
+[2K     [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━[0m [32m81.9/87.4 kB[0m [31m2.4 MB/s[0m eta [36m0:00:01[0m
+[2K     [90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m87.4/87.4 kB[0m [31m2.0 MB/s[0m eta [36m0:00:00[0m
+		[?25hRequirement already satisfied: numpy>=1.16.3 in /usr/local/lib/python3.10/dist-packages (from tpot) (1.25.2)
+		Requirement already satisfied: scipy>=1.3.1 in /usr/local/lib/python3.10/dist-packages (from tpot) (1.11.4)
+		Collecting scikit-learn>=1.4.1 (from tpot)
+		  Downloading scikit_learn-1.4.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (12.1 MB)
+		[2K     [90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m12.1/12.1 MB[0m [31m46.8 MB/s[0m eta [36m0:00:00[0m
+		[?25hCollecting deap>=1.2 (from tpot)
+		  Downloading deap-1.4.1-cp310-cp310-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (135 kB)
+		[2K     [90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m135.4/135.4 kB[0m [31m9.4 MB/s[0m eta [36m0:00:00[0m
+		[?25hCollecting update-checker>=0.16 (from tpot)
+		  Downloading update_checker-0.18.0-py3-none-any.whl (7.0 kB)
+		Requirement already satisfied: tqdm>=4.36.1 in /usr/local/lib/python3.10/dist-packages (from tpot) (4.66.4)
+		Collecting stopit>=1.1.1 (from tpot)
+		  Downloading stopit-1.1.2.tar.gz (18 kB)
+		  Preparing metadata (setup.py) ... [?25l[?25hdone
+		Requirement already satisfied: pandas>=0.24.2 in /usr/local/lib/python3.10/dist-packages (from tpot) (2.0.3)
+		Requirement already satisfied: joblib>=0.13.2 in /usr/local/lib/python3.10/dist-packages (from tpot) (1.4.2)
+		Requirement already satisfied: xgboost>=1.1.0 in /usr/local/lib/python3.10/dist-packages (from tpot) (2.0.3)
+		Requirement already satisfied: python-dateutil>=2.8.2 in /usr/local/lib/python3.10/dist-packages (from pandas>=0.24.2->tpot) (2.8.2)
+		Requirement already satisfied: pytz>=2020.1 in /usr/local/lib/python3.10/dist-packages (from pandas>=0.24.2->tpot) (2023.4)
+		Requirement already satisfied: tzdata>=2022.1 in /usr/local/lib/python3.10/dist-packages (from pandas>=0.24.2->tpot) (2024.1)
+		Requirement already satisfied: threadpoolctl>=2.0.0 in /usr/local/lib/python3.10/dist-packages (from scikit-learn>=1.4.1->tpot) (3.5.0)
+		Requirement already satisfied: requests>=2.3.0 in /usr/local/lib/python3.10/dist-packages (from update-checker>=0.16->tpot) (2.31.0)
+		Requirement already satisfied: six>=1.5 in /usr/local/lib/python3.10/dist-packages (from python-dateutil>=2.8.2->pandas>=0.24.2->tpot) (1.16.0)
+		Requirement already satisfied: charset-normalizer<4,>=2 in /usr/local/lib/python3.10/dist-packages (from requests>=2.3.0->update-checker>=0.16->tpot) (3.3.2)
+		Requirement already satisfied: idna<4,>=2.5 in /usr/local/lib/python3.10/dist-packages (from requests>=2.3.0->update-checker>=0.16->tpot) (3.7)
+		Requirement already satisfied: urllib3<3,>=1.21.1 in /usr/local/lib/python3.10/dist-packages (from requests>=2.3.0->update-checker>=0.16->tpot) (2.0.7)
+		Requirement already satisfied: certifi>=2017.4.17 in /usr/local/lib/python3.10/dist-packages (from requests>=2.3.0->update-checker>=0.16->tpot) (2024.2.2)
+		Building wheels for collected packages: stopit
+		  Building wheel for stopit (setup.py) ... [?25l[?25hdone
+		  Created wheel for stopit: filename=stopit-1.1.2-py3-none-any.whl size=11938 sha256=192c628f1394c6ae5923c89ba76754012772281abbbf757a4914447cded3f7ad
+		  Stored in directory: /root/.cache/pip/wheels/af/f9/87/bf5b3d565c2a007b4dae9d8142dccc85a9f164e517062dd519
+		Successfully built stopit
+		Installing collected packages: stopit, deap, update-checker, scikit-learn, tpot
+		  Attempting uninstall: scikit-learn
+		    Found existing installation: scikit-learn 1.2.2
+		    Uninstalling scikit-learn-1.2.2:
+		      Successfully uninstalled scikit-learn-1.2.2
+		Successfully installed deap-1.4.1 scikit-learn-1.4.2 stopit-1.1.2 tpot-0.12.2 update-checker-0.18.0
+
+Code cell <MsMMWjGgfb6C>
+# %% [code]
+from tpot import TPOTRegressor
+
+Code cell <IMZ58d4XLCiP>
+# %% [code]
+#importing data from a local CSV file
+from google.colab import files
+uploaded = files.upload()
+
+Execution output from May 15, 2024 12:17 AM
+6KB
+	Stream
+		Saving csv_result-jura.csv to csv_result-jura.csv
+
+Code cell <NS_siyrXLaYS>
+# %% [code]
+import pandas as pd
+df = pd.read_csv("csv_result-jura.csv")
+df.head()
+y_col = [
+'Cd',
+'Cu',
+'Pb',
+# 'Y4',
+# 'Y5',
+# 'Y6'
+]
+y = df[y_col]
+y.head()
+#X_col = ['Xloc','Yloc','Cr','Ni','Zn','Co']
+#X = df[X_col]
+X = df[df.columns.drop(y)]
+#X=df.drop(columns=['Cd','Cu','Pb'])
+y.head()
+
+Execution output from May 15, 2024 12:17 AM
+10KB
+	text/plain
+		Cd     Cu     Pb
+		0  1.740  25.72  77.36
+		1  1.335  24.76  77.88
+		2  1.610   8.88  30.80
+		3  2.150  22.70  56.40
+		4  1.565  34.32  66.40
+
+Code cell <QwfcZLHRLbU9>
+# %% [code]
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(
+X, y, test_size = 0.20, random_state = 123)
+X_train.fillna(X_train.mean(), inplace=True)
+X_test.fillna(X_test.mean(), inplace=True)
+y_train.fillna(y_train.mean(), inplace=True)
+y_test.fillna(y_test.mean(), inplace=True)
+from sklearn.preprocessing import MinMaxScaler
+
+from sklearn.compose import TransformedTargetRegressor
+
+# Initialize the scaler
+scaler=MinMaxScaler(feature_range=(0,1))
+
+# Choose a transformer for the target variable (e.g., StandardScaler)
+target_transformer = scaler
+
+
+Code cell <jQLc7OEEzfZW>
+# %% [code]
+X_train
+Execution output from Apr 7, 2024 1:40 PM
+21KB
+	text/plain
+		Xloc   Yloc  Landuse=1  Landuse=2  Landuse=3  Landuse=4  Rock=1  Rock=2  \
+		211  2.220  2.732          0          1          0          0       0       1   
+		328  2.251  3.288          0          0          1          0       0       0   
+		102  3.590  4.033          0          1          0          0       0       0   
+		332  2.218  1.485          0          1          0          0       1       0   
+		228  3.308  2.963          0          0          1          0       0       0   
+		..     ...    ...        ...        ...        ...        ...     ...     ...   
+		83   4.113  2.700          1          0          0          0       0       1   
+		17   3.043  4.692          0          0          1          0       1       0   
+		230  3.692  2.430          1          0          0          0       0       1   
+		98   3.085  1.677          0          0          1          0       0       1   
+		322  4.022  1.453          0          1          0          0       0       1   
+		
+		     Rock=3  Rock=4  Rock=5     Cr     Ni      Zn      Co  
+		211       0       0       0  43.48  23.88   62.28  12.280  
+		328       0       0       1  14.92   4.68   26.80   1.920  
+		102       1       0       0  56.40  24.84   79.60   7.920  
+		332       0       0       0  34.08  16.36   70.00  12.040  
+		228       0       0       1  36.00  23.92   78.40  17.320  
+		..      ...     ...     ...    ...    ...     ...     ...  
+		83        0       0       0   8.72   7.16   65.20   1.552  
+		17        0       0       0  25.20  11.32   31.32   3.536  
+		230       0       0       0  19.40   8.76   31.16   5.000  
+		98        0       0       0  40.40  29.80  107.20  11.800  
+		322       0       0       0  47.00  36.72  100.00  10.600  
+		
+		[287 rows x 15 columns]
+
+Code cell <Py-9a3ywe8eB>
+# %% [code]
+y_train
+Execution output from Apr 7, 2024 1:40 PM
+13KB
+	text/plain
+		Cd     Cu     Pb
+		211  0.770  16.00  44.40
+		328  0.330   5.72  18.68
+		102  2.080  11.52  37.56
+		332  0.375  19.36  45.20
+		228  1.060  28.00  50.00
+		..     ...    ...    ...
+		83   1.285  13.64  84.40
+		17   0.625   8.24  29.92
+		230  1.610   9.44  42.80
+		98   2.040  26.20  63.92
+		322  1.950  22.60  52.00
+		
+		[287 rows x 3 columns]
+
+Code cell <lLOiEzntZPyu>
+# %% [code]
+import numpy as np
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import RobustScaler
+from sklearn.compose import TransformedTargetRegressor
+from sklearn.ensemble import RandomForestRegressor, ExtraTreesRegressor
+from sklearn.svm import LinearSVR
+from sklearn.ensemble import RandomForestRegressor, ExtraTreesRegressor
+from sklearn.multioutput import MultiOutputRegressor
+#rfg = MultiOutputRegressor(RandomForestRegressor(n_estimators=100,criterion='squared_error'))
+rfg = MultiOutputRegressor(TPOTRegressor(generations=5, population_size=50,verbosity=2, random_state=123,n_jobs=1, max_time_mins=None, max_eval_time_mins=5, cv=10, scoring='neg_mean_squared_error'))
+# Create a TransformedTargetRegressor
+model = TransformedTargetRegressor(regressor=rfg, transformer=target_transformer)
+model = rfg.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+model.score(X_test, y_test)
+
+
+
+Execution output from Apr 7, 2024 2:00 PM
+3KB
+	Stream
+		Generation 1 - Current best internal CV score: -0.3774343264446666
+		
+		Generation 2 - Current best internal CV score: -0.3774343264446666
+		
+		Generation 3 - Current best internal CV score: -0.3751253682247653
+		
+		Generation 4 - Current best internal CV score: -0.37464432179054186
+		
+		Generation 5 - Current best internal CV score: -0.37118061207370034
+		
+		Best pipeline: RandomForestRegressor(input_matrix, bootstrap=True, max_features=0.3, min_samples_leaf=2, min_samples_split=11, n_estimators=100)
+		Generation 1 - Current best internal CV score: -275.16299217840213
+		
+		Generation 2 - Current best internal CV score: -274.90088719518815
+		
+		Generation 3 - Current best internal CV score: -274.90088719518815
+		
+		Generation 4 - Current best internal CV score: -274.8947870753605
+		
+		Generation 5 - Current best internal CV score: -274.74366019538036
+		
+		Best pipeline: ElasticNetCV(RidgeCV(input_matrix), l1_ratio=0.25, tol=0.1)
+		Generation 1 - Current best internal CV score: -517.3267215363226
+		
+		Generation 2 - Current best internal CV score: -515.2238647949536
+		
+		Generation 3 - Current best internal CV score: -515.2238647949536
+		
+		Generation 4 - Current best internal CV score: -515.2238647949536
+		
+		Generation 5 - Current best internal CV score: -515.2238647949536
+		
+		Best pipeline: ElasticNetCV(RidgeCV(input_matrix), l1_ratio=0.25, tol=0.001)
+		/usr/local/lib/python3.10/dist-packages/sklearn/base.py:493: UserWarning: X does not have valid feature names, but RidgeCV was fitted with feature names
+		  warnings.warn(
+		/usr/local/lib/python3.10/dist-packages/sklearn/base.py:493: UserWarning: X does not have valid feature names, but RidgeCV was fitted with feature names
+		  warnings.warn(
+		/usr/local/lib/python3.10/dist-packages/sklearn/base.py:493: UserWarning: X does not have valid feature names, but RidgeCV was fitted with feature names
+		  warnings.warn(
+		/usr/local/lib/python3.10/dist-packages/sklearn/base.py:493: UserWarning: X does not have valid feature names, but RidgeCV was fitted with feature names
+		  warnings.warn(
+	text/plain
+		Optimization Progress:   0%|          | 0/300 [00:00<?, ?pipeline/s]
+		Optimization Progress:   0%|          | 0/300 [00:00<?, ?pipeline/s]
+		Optimization Progress:   0%|          | 0/300 [00:00<?, ?pipeline/s]
+		0.45153035074731146
+
+Code cell <YvgsgfLnZtnb>
+# %% [code]
+import math
+import numpy as np
+from statistics import mean
+from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_absolute_error
+rmse1=math.sqrt(mean_squared_error(y_test, y_pred))
+print('RMSE  is',rmse1)
+mae1=mean_absolute_error(y_test, y_pred)
+print('MAE is',mae1)
+
+
+
+
+# Calculate RMSE for each output
+rmse_per_output = np.sqrt(mean_squared_error(y_test, y_pred, multioutput='raw_values'))
+print('rmse_per_output:',rmse_per_output)
+
+
+def relative_root_mean_squared_error(true, pred):
+    n = len(true) # update
+    num = np.sum(np.square(true - pred)) / n  # update
+    den = np.sum(np.square(pred))
+    squared_error = num/den
+    rrmse_loss = np.sqrt(squared_error)
+    return rrmse_loss
+
+
+rrmse2=relative_root_mean_squared_error(y_test,y_pred)
+arrmse2=np.mean(rrmse2)
+percentage_average_relative_rmse2 = arrmse2 * 100
+print("arrmse =", arrmse2)
+print(f"Percentage arrmse = {percentage_average_relative_rmse2:.2f}%")
+Execution output from Apr 7, 2024 2:01 PM
+0KB
+	Stream
+		RMSE  is 15.963473974066387
+		MAE is 8.798540106274436
+		rmse_per_output: [ 0.53543035 12.44542028 24.68445528]
+		arrmse = 0.02153567789304692
+		Percentage arrmse = 2.15%
+
+Code cell <e0f5RgVwsLpI>
+# %% [code]
+from tables import Column
+import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.pyplot as plt
+# taking all rows but only 6 columns
+df_small=pd.DataFrame(y_pred)
+#df_small = y_test.iloc[:,:3]
+features=['Cd',
+'Cu',
+'Pb',]
+correlation_mat = df_small.corr('pearson')
+sns.heatmap(correlation_mat, annot = True,yticklabels=features,xticklabels=features)
+plt.show()
+Execution output from Apr 7, 2024 2:02 PM
+20KB
+	text/plain
+		<Figure size 640x480 with 2 Axes>
+
+Code cell <p1lzybViJvxx>
+# %% [code]
+import pandas as pd
+df = pd.read_csv("csv_result-jura.csv")
+df.head()
+y_col = [
+'Cd',
+'Cu',
+'Pb',
+# 'Y4',
+# 'Y5',
+# 'Y6'
+]
+y = df[y_col]
+y.head()
+#X_col = ['Xloc','Yloc','Cr','Ni','Zn','Co']
+#X = df[X_col]
+X = df[df.columns.drop(y)]
+#X=df.drop(columns=['Cd','Cu','Pb'])
+y.head()
+Execution output from Apr 7, 2024 2:02 PM
+10KB
+	text/plain
+		Cd     Cu     Pb
+		0  1.740  25.72  77.36
+		1  1.335  24.76  77.88
+		2  1.610   8.88  30.80
+		3  2.150  22.70  56.40
+		4  1.565  34.32  66.40
+
+Code cell <2C7cexgkJ6md>
+# %% [code]
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(
+X, y, test_size = 0.20, random_state = 123)
+X_train.fillna(X_train.mean(), inplace=True)
+X_test.fillna(X_test.mean(), inplace=True)
+y_train.fillna(y_train.mean(), inplace=True)
+y_test.fillna(y_test.mean(), inplace=True)
+from sklearn.preprocessing import MinMaxScaler
+
+from sklearn.compose import TransformedTargetRegressor
+
+# Initialize the scaler
+scaler=MinMaxScaler(feature_range=(0,1))
+
+# Choose a transformer for the target variable (e.g., StandardScaler)
+target_transformer = scaler
+
+Code cell <SBOIWM4L46VM>
+# %% [code]
+from sklearn.ensemble import RandomForestRegressor, ExtraTreesRegressor
+from sklearn.svm import LinearSVR
+from sklearn.ensemble import RandomForestRegressor, ExtraTreesRegressor
+from sklearn.multioutput import MultiOutputRegressor
+from sklearn.multioutput import RegressorChain
+reg2 = LinearSVR(epsilon=0.0, tol=0.0001, C=1.0, loss='epsilon_insensitive', fit_intercept=True, intercept_scaling=1.0, dual=True, verbose=2, random_state=None, max_iter=100000000)
+chain = RegressorChain(base_estimator=reg2, order=[0,1,2]).fit(X_train, y_train)
+# Create a TransformedTargetRegressor
+model = TransformedTargetRegressor(regressor=chain, transformer=target_transformer)
+model.fit(X_train, y_train)
+y_pred2 = model.predict(X_test)
+model.score(X_test, y_test)
+
+Execution output from Apr 7, 2024 2:05 PM
+0KB
+	Stream
+		[LibLinear][LibLinear][LibLinear][LibLinear][LibLinear][LibLinear]
+	text/plain
+		0.46053419872446294
+
+Code cell <cwxlGCdSAnj7>
+# %% [code]
+import math
+import numpy as np
+from statistics import mean
+from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_absolute_error
+rmse2=math.sqrt(mean_squared_error(y_test, y_pred2))
+print('RMSE  is',rmse2)
+mae2=mean_absolute_error(y_test, y_pred2)
+print('MAE is',mae2)
+
+
+
+
+# Calculate RMSE for each output
+rmse_per_output = np.sqrt(mean_squared_error(y_test, y_pred2, multioutput='raw_values'))
+print('rmse_per_output:',rmse_per_output)
+
+
+def relative_root_mean_squared_error(true, pred):
+    n = len(true) # update
+    num = np.sum(np.square(true - pred)) / n  # update
+    den = np.sum(np.square(pred))
+    squared_error = num/den
+    rrmse_loss = np.sqrt(squared_error)
+    return rrmse_loss
+
+
+rrmse2=relative_root_mean_squared_error(y_test,y_pred2)
+arrmse2=np.mean(rrmse2)
+percentage_average_relative_rmse2 = arrmse2 * 100
+print("arrmse =", arrmse2)
+print(f"Percentage arrmse = {percentage_average_relative_rmse2:.2f}%")
+Execution output from Apr 7, 2024 2:05 PM
+0KB
+	Stream
+		RMSE  is 15.722681894899036
+		MAE is 8.453590775944704
+		rmse_per_output: [ 0.56117377 11.8139546  24.53005786]
+		arrmse = 0.02296685724002696
+		Percentage arrmse = 2.30%
+
+Code cell <r8NNfkTesZaV>
+# %% [code]
+from tables import Column
+import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.pyplot as plt
+# taking all rows but only 6 columns
+df_small=pd.DataFrame(y_pred2)
+#df_small = y_test.iloc[:,:3]
+features=['Cd',
+'Cu',
+'Pb',]
+correlation_mat = df_small.corr('pearson')
+sns.heatmap(correlation_mat, annot = True,yticklabels=features,xticklabels=features)
+plt.show()
+Execution output from Apr 7, 2024 2:06 PM
+21KB
+	text/plain
+		<Figure size 640x480 with 2 Axes>
+
+Code cell <bCgA0IxIKnfc>
+# %% [code]
+import pandas as pd
+df = pd.read_csv("csv_result-jura.csv")
+df.head()
+y_col = [
+'Cd',
+'Cu',
+'Pb',
+# 'Y4',
+# 'Y5',
+# 'Y6'
+]
+y = df[y_col]
+y.head()
+#X_col = ['Xloc','Yloc','Cr','Ni','Zn','Co']
+#X = df[X_col]
+X = df[df.columns.drop(y)]
+#X=df.drop(columns=['Cd','Cu','Pb'])
+y.head()
+Execution output from May 9, 2024 2:13 AM
+10KB
+	text/plain
+		Cd     Cu     Pb
+		0  1.740  25.72  77.36
+		1  1.335  24.76  77.88
+		2  1.610   8.88  30.80
+		3  2.150  22.70  56.40
+		4  1.565  34.32  66.40
+
+Code cell <GkogA2raQI-w>
+# %% [code]
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(
+X, y, test_size = 0.20, random_state = 123)
+X_train.fillna(X_train.mean(), inplace=True)
+X_test.fillna(X_test.mean(), inplace=True)
+y_train.fillna(y_train.mean(), inplace=True)
+y_test.fillna(y_test.mean(), inplace=True)
+
+Code cell <LScLq50ztobT>
+# %% [code]
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(
+X, y, test_size = 0.20, random_state = 123)
+X_train.fillna(X_train.mean(), inplace=True)
+X_test.fillna(X_test.mean(), inplace=True)
+y_train.fillna(y_train.mean(), inplace=True)
+y_test.fillna(y_test.mean(), inplace=True)
+from sklearn.preprocessing import MinMaxScaler
+from tpot import TPOTRegressor
+from sklearn.compose import TransformedTargetRegressor
+
+# Initialize the scaler
+scaler=MinMaxScaler(feature_range=(0,1))
+X_train=scaler.fit_transform(X_train)
+X_test=scaler.fit_transform(X_test)
+y_train=scaler.fit_transform(y_train)
+y_test=scaler.fit_transform(y_test)
+
+Code cell <alnp0Cm1MPEx>
+# %% [code]
+from sklearn.svm import LinearSVR
+class MultiOutputTP(object):
+  def __init__(self, *args, **kwargs):
+    self.args = args
+    self.kwargs = kwargs
+  def fit(self, X, y):
+    X, y = map(np.atleast_2d, (X, y))
+    assert X.shape[0] == y.shape[0]
+    yy = y.shape[1]
+    self.regs = []
+    i = 0
+    for i in range(yy):
+
+      reg = TPOTRegressor(generations=5, population_size=50,verbosity=2, random_state=123, max_time_mins=None, max_eval_time_mins=5, cv=10,scoring='neg_mean_squared_error')
+
+      Xi = np.column_stack([X, y[:, :i]])
+      yi = y[:, i]
+
+
+      self.regs.append(reg.fit(Xi, yi))
+    return self
+  def predict(self, X):
+    y = np.empty([X.shape[0], len(self.regs)])
+    for i, reg in enumerate(self.regs):
+      y[:, i] = reg.predict(np.column_stack([X, y[:, :i]]))
+    return y
+
+
+Code cell <YnbYahFmNMGN>
+# %% [code]
+import numpy as np
+from tpot import decorators
+#decorators.MAX_EVAL_SECS = 240
+reg2 = MultiOutputTP(1).fit(X_train, y_train)
+#X = np.dtype('float64')
+
+
+Execution output from May 15, 2024 12:34 AM
+3KB
+	Stream
+		Generation 1 - Current best internal CV score: -0.3846691914488982
+		
+		Generation 2 - Current best internal CV score: -0.37716326724950433
+		
+		Generation 3 - Current best internal CV score: -0.36629944307765194
+		
+		Generation 4 - Current best internal CV score: -0.36629944307765194
+		
+		Generation 5 - Current best internal CV score: -0.36629944307765194
+		
+		Best pipeline: ExtraTreesRegressor(input_matrix, bootstrap=False, max_features=0.8, min_samples_leaf=3, min_samples_split=15, n_estimators=100)
+		Generation 1 - Current best internal CV score: -240.01869414714025
+		
+		Generation 2 - Current best internal CV score: -239.7775314363188
+		
+		Generation 3 - Current best internal CV score: -239.77542131921533
+		
+		Generation 4 - Current best internal CV score: -239.72670745449312
+		
+		Generation 5 - Current best internal CV score: -239.71204772975838
+		
+		Best pipeline: ElasticNetCV(SelectPercentile(RidgeCV(input_matrix), percentile=77), l1_ratio=0.65, tol=0.01)
+		Generation 1 - Current best internal CV score: -308.807426076713
+		
+		Generation 2 - Current best internal CV score: -279.45461035641904
+		
+		Generation 3 - Current best internal CV score: -279.45461035641904
+		
+		Generation 4 - Current best internal CV score: -277.139717594069
+		
+		Generation 5 - Current best internal CV score: -272.18981321480834
+		
+		Best pipeline: XGBRegressor(RobustScaler(input_matrix), learning_rate=0.1, max_depth=7, min_child_weight=3, n_estimators=100, n_jobs=1, objective=reg:squarederror, subsample=0.7000000000000001, verbosity=0)
+	text/plain
+		Optimization Progress:   0%|          | 0/300 [00:00<?, ?pipeline/s]
+		Optimization Progress:   0%|          | 0/300 [00:00<?, ?pipeline/s]
+		Optimization Progress:   0%|          | 0/300 [00:00<?, ?pipeline/s]
+
+Code cell <zrwvdhEkcwmK>
+# %% [code]
+Ypred2 = reg2.predict(X_test)
+from sklearn.metrics import r2_score
+r2 = r2_score(y_test, Ypred2)
+print('r2 score for perfect model is', r2)
+Execution output from May 15, 2024 12:35 AM
+0KB
+	Stream
+		r2 score for perfect model is 0.44906331155983176
+
+Code cell <h-FUS_dJy1gs>
+# %% [code]
+y_test=scaler.inverse_transform(y_test)
+Ypred2=scaler.inverse_transform(Ypred2)
+
+Code cell <l-Aejo4kNTx4>
+# %% [code]
+from tables import Column
+import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.pyplot as plt
+# taking all rows but only 6 columns
+df_small=pd.DataFrame(Ypred2)
+#df_small = y_test.iloc[:,:3]
+features=['Cd',
+'Cu',
+'Pb']
+correlation_mat = df_small.corr('pearson')
+sns.heatmap(correlation_mat, annot = True,yticklabels=features,xticklabels=features)
+plt.show()
+Execution output from May 15, 2024 12:35 AM
+22KB
+	text/plain
+		<Figure size 640x480 with 2 Axes>
+
+Code cell <LOOQTBmHXbOF>
+# %% [code]
+import math
+import numpy as np
+from statistics import mean
+from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_absolute_error
+rmse3=math.sqrt(mean_squared_error(y_test, Ypred2))
+print('RMSE  is',rmse3)
+mae3=mean_absolute_error(y_test, Ypred2)
+print('MAE  is',mae3)
+
+
+
+
+# Calculate RMSE for each output
+rmse_per_output = np.sqrt(mean_squared_error(y_test, Ypred2, multioutput='raw_values'))
+print('rmse_per_output:',rmse_per_output)
+
+def relative_root_mean_squared_error(true, pred):
+    n = len(true) # update
+    num = np.sum(np.square(true - pred)) / n  # update
+    den = np.sum(np.square(pred))
+    squared_error = num/den
+    rrmse_loss = np.sqrt(squared_error)
+    return rrmse_loss
+
+
+rrmse3=relative_root_mean_squared_error(y_test,Ypred2)
+arrmse3=np.mean(rrmse3)
+percentage_average_relative_rmse3 = arrmse3 * 100
+print("relative_root_mean_squared_error =", rrmse3)
+print("arrmse =", arrmse3)
+print(f"Percentage arrmse = {percentage_average_relative_rmse3:.2f}%")
+Execution output from May 15, 2024 12:35 AM
+0KB
+	Stream
+		RMSE  is 15.792031034271979
+		MAE  is 8.561123861932089
+		rmse_per_output: [ 0.53482658 12.83574227 24.14792772]
+		relative_root_mean_squared_error = Cd    0.000903
+		Cu    0.021677
+		Pb    0.040782
+		dtype: float64
+		arrmse = 0.021120858932031125
+		Percentage arrmse = 2.11%
+
+
